@@ -1,0 +1,17 @@
+{
+  "name": "chat-me",
+  "description": "",
+  "main": "",
+  "authors": [
+    "desxz <muratgun@posta.mu.edu.tr>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/desxz/chat-me",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

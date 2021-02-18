@@ -10,8 +10,17 @@ const indexRouter = require('./routes/index');
 const auth = require('./routes/auth');
 const chat = require('./routes/chat');
 const passport = require('passport');
+const redisStore = require('./helpers/redisStore');
+
 const app = express();
+
+//helpers
 const db = require('./helpers/db.js')();
+
+//middleware
+const isAuthenticated = require('./middleware/isAuthenticated');
+
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -24,10 +33,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'bower_components')));
 
 app.use(session({
+  store: redisStore,
   secret: process.env.SESSION_SECRET_KEY,
   resave: false,
   saveUninitialized: true,
-  cookie: {secure: true, maxAge: 14 * 24 * 3600000}
+  cookie: {maxAge: 14 * 24 * 3600000}
 }));
 
 app.use(passport.initialize());
@@ -35,7 +45,7 @@ app.use(passport.session());
 
 app.use('/', indexRouter);
 app.use('/auth', auth);
-app.use('/chat', chat);
+app.use('/chat',isAuthenticated, chat);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

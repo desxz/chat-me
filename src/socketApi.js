@@ -5,6 +5,7 @@ const socketAuthorization = require('../middleware/socketAuthorization');
 const users = require('../models/users');
 const Users = require('./lib/Users');
 const Rooms = require('./lib/Rooms');
+const Messages = require('./lib/Messages');
 
 
 
@@ -26,8 +27,18 @@ io.on('connection', socket => {
         io.emit('onlineList', users);
     });
 
+    socket.on('newMessage', data => {
+        const messageData = {
+            ...data,
+            userId: socket.request.user._id,
+            username: socket.request.user.name,
+            surname: socket.request.user.surname, 
+        };
+        Messages.upsert(messageData);
+        socket.broadcast.emit('reeiveMessage', messageData);
+    });
+
     Rooms.list(rooms => {
-        console.log(rooms);
         io.emit('roomList', rooms);
     });
 
@@ -39,8 +50,9 @@ io.on('connection', socket => {
         });
     });
 
+   
     socket.on('disconnect', () => {
-        Users.remove(socket.request.user.googleId);
+        Users.remove(socket.request.user._id);
 
         Users.list(users => {
             io.emit('onlineList', users);

@@ -311,6 +311,11 @@ ul,li{
     background-repeat: no-repeat;
     background-position: center;
 }
+
+.send{
+    cursor: pointer;
+}
+
 .container .right .write .write-link.send:before {
     display: inline-block;
     float: left;
@@ -420,6 +425,12 @@ ul,li{
 .bottom{
     text-align: center;
     padding-top: 16px
+}
+
+.loading{
+    text-align: center;
+    font-size: 18px;
+    padding: 30px 30px;
 }
 
 @keyframes slideFromLeft {
